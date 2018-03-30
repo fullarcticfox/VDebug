@@ -41,13 +41,30 @@
 }
 
 .VDebugArrayTree{
+	padding: 3px;
+}
+
+.VDebugArrayTree details{
 	padding: 2px;
 }
 
 
+.VDebugFilterArray{
+
+	margin-top: 10px;
+	margin-left: 10px;
+	margin-bottom: 10px;
+}
+
+.VDebugFilterArray input[type=text]{
+	width: 300px;
+}
 
 
 
+.highlight{
+	background-color: yellow;
+}
 
 
 

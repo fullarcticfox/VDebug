@@ -48,5 +48,10 @@ function VDebugLoadVarData()
 }
 
 
+function VDebugFilterArray(var_index)
+{
+	//alert(var_index);
+	$('#VDebugArrayTree').highlight("tupol");
 
+}
 

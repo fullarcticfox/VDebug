@@ -25,16 +25,24 @@ class VDebugInterface extends VDebug
 		
 		if(is_array($var_data['VALUE']))
 		{
-			echo $this->showarray($var_data['VALUE']);
+			echo $this->showarray($var_data['VALUE'], $params['var_index']);
 		}
 	}
 	
 	
-	private function showarray($arr, $level=1)
+	private function showarray($arr, $var_index, $level=1 )
 	{
 		$html = '';
 		if(sizeof($arr)!=0)
 		{
+			if($level==1)//before level array we show caption contol
+			{
+				$html .= '
+					<div class="VDebugFilterArray">
+						<input type="text" placeholder="Key or value" id="VDebugArrayFilter" onkeyup="VDebugFilterArray('.$var_index.')">
+					</div>
+					';
+			}
 			$padding_left = 10*$level;
 			foreach($arr as $k=>$v)
 			{
@@ -44,13 +52,13 @@ class VDebugInterface extends VDebug
 				{
 					$level++;
 					$html .= '<div class="VDebugArrayTree" style="padding-left: '.$padding_left.'px" >
-									<details open><summary>['.$k.']=> array</summary>'.$this->showarray($v, $level).'</details></div>';
+									<details open><summary>['.$k.'] =>  array</summary>'.$this->showarray($v, $var_index, $level).'</details></div>';
 					$level--;
 					
 				}
 				else
 				{
-					$html .= '<div class="VDebugArrayTree" style="padding-left: '.$padding_left.'px">['.$k.']=>['.$v.']</div>';
+					$html .= '<div class="VDebugArrayTree" style="padding-left: '.$padding_left.'px">['.$k.'] => ['.$v.']</div>';
 				}
 				$html .= '';
 			}

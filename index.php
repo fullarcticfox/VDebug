@@ -39,8 +39,11 @@ if(isset($_GET['mode'])&&$_GET['mode']=='ajax')
   <meta charset="utf-8">
   <title>VDebug Test</title>
    <script type="text/javascript" src="/vdebug/js/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="/vdebug/js/jquery.highlight.js"></script>
    <script type="text/javascript" src="/vdebug/js/vdebug.js"></script>
    <link rel="stylesheet" type="text/css" href="/vdebug/css/vdebug.css" >
+
+
   </head>
 <body>
 
@@ -96,6 +99,10 @@ class A
 		//$this->debug->wv1($arr, 'arr');
 		
 		$this->debug->wv1($arr, 'arr2');
+
+		$arr = array("test1", "test2");
+            
+		$this->debug->wv1($arr, 'arr1');
 
 		
 		$arr = array('volga', 'jkjkj');
