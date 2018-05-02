@@ -14,9 +14,12 @@ class VDebug
 		{
 			$this->vars = $_SESSION['VDebug']['vars'];
 		}
+		
+		//print_r($_SESSION['VDebug']['vars']);
 
 		//Register end script event
 		register_shutdown_function(array($this, 'shutdown'));
+		//unset($_SESSION['VDebug']);
 		
 	}
 	
@@ -52,7 +55,26 @@ class VDebug
 	//Watch var level 1
 	public function wv1($var, $var_name)
 	{	
-		$this->var_add_to_stack($var, $var_name);
+		$trace = debug_backtrace();
+	
+		$line = -1;
+		$file = '';
+		$func = '';
+		$class = '';
+		
+		if(isset($trace[0]))
+		{
+			$line = $trace[0]['line'];
+			$file = $this->get_file_name($trace[0]['file']);
+		}
+		
+		if(isset($trace[1]))
+		{
+			$func = $trace[1]['function'];
+			$class = $trace[1]['class'];
+		}
+		
+		$this->var_add_to_stack($var, $var_name, $line, $file, $func, $class);
 	}	
 	
 	
@@ -63,28 +85,50 @@ class VDebug
 			return $vars;
 		foreach($this->vars as $index=>$data)
 		{
-			$vars[$index]=$data["NAME"];
+			$vars[$index]=$data;
 		}
 		return $vars;
 	}
 	
 	
-	private function var_add_to_stack($var, $var_name)
+	private function var_add_to_stack($var, $var_name, $line=-1, $file='', $func='', $class='')
 	{
-		$var_index = $this->var_exists($var_name);
-		if($var_index==-1)
+		$index = $file.$line;
+		if(!$this->var_index_exists($file, $line))
 		{
-			$this->vars[] = array('NAME'=>$var_name, 'VALUE'=>$var);
-			$_SESSION['VDebug']['vars'][] = array('NAME'=>$var_name, 'VALUE'=>$var);
-			return sizeof($this->vars)-1;
+			$type = gettype($var);
+			$this->vars[$index] = array('NAME'=>$var_name, 'VALUE'=>$var, 'LINE'=>$line, 'FILE'=>$file, 'FUNC'=>$func, 'CLASS'=>$class, 'TYPE'=>$type);
+			$_SESSION['VDebug']['vars'][$index] = array('NAME'=>$var_name, 'VALUE'=>$var, 'LINE'=>$line, 'FILE'=>$file, 'FUNC'=>$func, 'CLASS'=>$class, 'TYPE'=>$type);
 		}
 		
 		
 		//Var exists, updating...
-		$this->vars[$var_index]['VALUE'] = $var;
-		return -1;
+		$this->vars[$index]['NAME'] = $var_name;
+		$this->vars[$index]['VALUE'] = $var;
+		$this->vars[$index]['LINE'] = $line;
+		$this->vars[$index]['FILE'] = $file;
+		$this->vars[$index]['FUNC'] = $func;
+		$this->vars[$index]['CLASS'] = $class;
+		$this->vars[$index]['TYPE'] = $type;
+		
+		$_SESSION['VDebug']['vars'][$index]['NAME'] = $var_name;
+		$_SESSION['VDebug']['vars'][$index]['VALUE'] = $var;
+		$_SESSION['VDebug']['vars'][$index]['LINE'] = $line;
+		$_SESSION['VDebug']['vars'][$index]['FILE'] = $file;
+		$_SESSION['VDebug']['vars'][$index]['FUNC'] = $func;
+		$_SESSION['VDebug']['vars'][$index]['CLASS'] = $class;
+		$_SESSION['VDebug']['vars'][$index]['TYPE'] = $type;
 	}
 	
+	
+	
+	private function var_index_exists($file, $line)
+	{
+		$index = $file.$line;
+		if(isset($this->vars[$index]))
+			return true;
+		return false;
+	}
 	
 	
 	private function var_exists($var_name)
@@ -113,6 +157,20 @@ class VDebug
 	
 	}
 	
+	
+	private function get_file_name($path)
+	{
+		$arr = explode('/', $path);
+		if(strpos($path, '/')===false)
+		{
+			$arr = explode('\\', $path);
+		}
+		if(sizeof($arr)<=1)
+			return $path;
+		
+		return array_pop($arr);
+	}	
+
 }
 ?>
 

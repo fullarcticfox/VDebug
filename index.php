@@ -98,14 +98,27 @@ class A
 		$arr=array(1,2,array('ffdfd'=>'fdfd', 'pole'=>'tupol'));
 		//$this->debug->wv1($arr, 'arr');
 		
-		$this->debug->wv1($arr, 'arr2');
+		$this->debug->wv1($arr, 'arr');
 
 		$arr = array("test1", "test2");
             
-		$this->debug->wv1($arr, 'arr1');
+		$this->debug->wv1($arr, 'arr');
 
 		
 		$arr = array('volga', 'jkjkj');
+		
+		$bool = false;
+		$this->debug->wv1($bool, 'bool');
+		
+		$tt = false;
+		$this->debug->wv1($tt, 'tt');
+		
+		$this->debug->wv1($this, 'this1');
+		
+		foreach($arr as $k=>$v)
+		{
+			
+		}
 		
 		$this->debug->epilog();
 	}
